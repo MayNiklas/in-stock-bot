@@ -39,9 +39,8 @@ headers = {
     'Upgrade-Insecure-Requests': '1',
 }
 
-response = requests.get(f'{Product_URL}', headers=headers)
-
 while True:
+	response = requests.get(f'{Product_URL}', headers=headers)
 	print(response.text)
 	if not '<span style="color:red;font-size:12px;font-weight:bold;">Leider ist dieser Artikel nicht mehr verf&uuml;gbar.</span>' in response.text:
 		bot.send_message(chat_id=chat_id,text=f'{Product} lieferbar! {Product_URL}')
