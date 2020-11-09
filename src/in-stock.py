@@ -1,3 +1,4 @@
+import os
 import time
 import logging
 import telegram
@@ -5,10 +6,10 @@ import requests
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
-API_Key = '<API_Key>'
-chat_id = '<chat_id>'
-Product = '<Product'
-Product_URL = '<URL>'
+API_Key = os.environ['API_Key']
+chat_id = os.environ['chat_id']
+Product = os.environ['Product']
+Product_URL = os.environ['Product_URL']
 
 ### You won't receive notifications by using /start at this point!
 ### Feature is in work!
