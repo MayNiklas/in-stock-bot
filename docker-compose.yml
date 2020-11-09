@@ -1,0 +1,15 @@
+---
+version: "3"
+services:
+  in-stock-bot:
+    build: .
+    environment:
+      - UID=1000 
+      - GID=1000
+      - API_Key=
+      - chat_id=
+      - Product=
+      - Product_URL=
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
