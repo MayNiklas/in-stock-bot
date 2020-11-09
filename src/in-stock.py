@@ -3,6 +3,8 @@ import time
 import logging
 import telegram
 import requests
+from time import sleep
+from random import randint
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
@@ -45,7 +47,7 @@ while True:
 	print(response.text)
 	if not '<span style="color:red;font-size:12px;font-weight:bold;">Leider ist dieser Artikel nicht mehr verf&uuml;gbar.</span>' in response.text:
 		bot.send_message(chat_id=chat_id,text=f'{Product} lieferbar! {Product_URL}')
-	time.sleep(60)
+	sleep(randint(30,60))
 
 updater.idle()
 driver.close()
