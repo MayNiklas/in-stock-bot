@@ -3,6 +3,11 @@ version: "3"
 services:
   in-stock-bot:
     build: .
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
     environment:
       - UID=1000 
       - GID=1000
