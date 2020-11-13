@@ -6,6 +6,7 @@ RUN apt-get update && apt-get -y upgrade && apt-get install -y \
 
 
 VOLUME /app/
+VOLUME /app/data/
 WORKDIR /app
 
 COPY src/* /app/

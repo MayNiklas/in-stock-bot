@@ -8,6 +8,8 @@ services:
       options:
         max-size: "200k"
         max-file: "10"
+    volumes:
+       - "./data:/app/data:rw"
     environment:
       - UID=1000 
       - GID=1000

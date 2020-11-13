@@ -24,7 +24,7 @@ class Writer:
     Handles all csv file accesses, like read /write /search
     - Hardcoded on telegram chat-objects
     """
-    def __init__(self, file="chats.csv"):
+    def __init__(self, file="data/chats.csv"):
         """
         takes filename
         """
