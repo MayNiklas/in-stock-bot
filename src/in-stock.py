@@ -1,5 +1,6 @@
 import os
 import time
+import atexit
 import logging
 import telegram
 import requests
@@ -11,7 +12,6 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 import csv_utils
 
 API_Key = os.environ['API_Key']
-chat_id = os.environ['chat_id']
 Product = os.environ['Product']
 Product_URL = os.environ['Product_URL']
 
@@ -43,6 +43,7 @@ logger = logging.getLogger(__name__)
 updater = Updater(API_Key, use_context=True)
 
 dispatcher = updater.dispatcher
+
 dispatcher.add_handler(CommandHandler("start", notify))
 updater.start_polling()
 
@@ -55,12 +56,20 @@ headers = {
     'Upgrade-Insecure-Requests': '1',
 }
 
+
+def dispatch_update(writer: object, text: str) -> None:
+    """Iterates trough the list of chat objects - sending update"""
+    for chat in writer.entries:
+        bot.send_message(chat_id=chat.id, text=text)
+
 while True:
-	response = requests.get(f'{Product_URL}', headers=headers)
-	print(response.text)
-	if not '<span style="color:red;font-size:12px;font-weight:bold;">Leider ist dieser Artikel nicht mehr verf&uuml;gbar.</span>' in response.text:
-		bot.send_message(chat_id=chat_id,text=f'{Product} lieferbar! {Product_URL}')
-	sleep(randint(30,60))
+    response = requests.get(f'{Product_URL}', headers=headers)
+    #print(response.text)
+    if not '<span style="color:red;font-size:12px;font-weight:bold;">Leider ist dieser Artikel nicht mehr verf&uuml;gbar.</span>' in response.text:
+       #sending update based on chat objects
+       dispatch_update(writer, text=f'{Product} lieferbar! {Product_URL}')
+    
+    sleep(randint(30,60))
 
 updater.idle()
 driver.close()
