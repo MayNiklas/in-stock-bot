@@ -41,6 +41,40 @@ class Writer:
             None
         else:
             open(self.file, "w").close()
+    
+    def add(self, content) -> ChatObject:
+        """
+        Handles creation of new ChatObjects no created yet
+        - Needs a telegram.chat object as input
+        - Checks if object already exists
+        - Creates new one of needed
+        - returns ChatObject
+        """
+ 
+        #if entry already exists - breaking
+        result = self.search_id(content["id"])
+        if result:
+            #print(result)
+            return result[0]
+        #logging new
+        #getting content to write
+        #keys for the telegram.chat object
+        keys = ["id", "type", "username", "first_name", "last_name"]
+        line = [] #will contain the row to add
+        for key in keys: #going trough chat object
+            line.append(f"{content[key]}")
+        
+        #adding time to entry
+        t = time.strftime("%Y-%m-%d %H:%M:%S")
+        line.append(f"{t}")
+
+        new = ChatObject(line)
+
+        self.entries.append(new)
+        self.write()
+        return new
+
+
     def read(self):
         """
         Reads a whole csv file 
@@ -58,3 +92,22 @@ class Writer:
         return self.entries
 
 
+    def search_id(self, entry: int):
+        """Searches for a chat id in whole file"""
+
+        results = []
+        for chat in self.entries:
+            if chat.id == entry:
+                results.append(chat)
+        return results
+
+
+    def write(self):
+        """Writes all objects to file"""
+        text = ""
+        for o in self.entries:
+            text += f"{o.id};{o.type};{o.username};{o.first_name};{o.last_name};"
+            text += f"{o.first_contact};\n"
+
+        with open(self.file, "w") as f:
+            f.write(text)
