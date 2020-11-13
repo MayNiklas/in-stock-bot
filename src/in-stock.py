@@ -8,6 +8,8 @@ from random import randint
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
+import csv_utils
+
 API_Key = os.environ['API_Key']
 chat_id = os.environ['chat_id']
 Product = os.environ['Product']
@@ -16,11 +18,22 @@ Product_URL = os.environ['Product_URL']
 ### You won't receive notifications by using /start at this point!
 ### Feature is in work!
 def notify(update: Update, context: CallbackContext) -> None:
-	chat_ids = update.message.chat_id
-	update.message.reply_text(f"Bot has started!\nYour message ID: {chat_ids}\nYou will receive notifications in the future!")
+    chat_ids = update.message.chat_id
+    update.message.reply_text(f"Bot has started!\nYour message ID: {chat_ids}\nYou will receive notifications in the future!")
+    chat = writer.add(update.message.chat)
+    
 
 # init telegram
 bot = telegram.Bot(token=API_Key)
+
+#gets the read / write object
+writer = csv_utils.Writer()
+
+#makes sure the list is written before shuting down
+@atexit.register
+def goodbye():
+    writer.write()
+    print("Saved to file - stopping now")
 
 # init updater
 logging.basicConfig(
