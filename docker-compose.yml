@@ -8,11 +8,12 @@ services:
       options:
         max-size: "200k"
         max-file: "10"
+    volumes:
+       - "./data:/app/data:rw"
     environment:
       - UID=1000 
       - GID=1000
       - API_Key=
-      - chat_id=
       - Product=
       - Product_URL=
     stdin_open: true
