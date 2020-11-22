@@ -14,6 +14,7 @@ import csv_utils
 API_Key = os.environ['API_Key']
 Product = os.environ['Product']
 Product_URL = os.environ['Product_URL']
+UnavailableText = os.environ['UnavailableText']
 
 ### You won't receive notifications by using /start at this point!
 ### Feature is in work!
@@ -64,8 +65,7 @@ def dispatch_update(writer: object, text: str) -> None:
 
 while True:
     response = requests.get(f'{Product_URL}', headers=headers)
-    #print(response.text)
-    if not '<span style="color:red;font-size:12px;font-weight:bold;">Leider ist dieser Artikel nicht mehr verf&uuml;gbar.</span>' in response.text:
+    if not UnavailableText in response.text:
        #sending update based on chat objects
        dispatch_update(writer, text=f'{Product} lieferbar! {Product_URL}')
     

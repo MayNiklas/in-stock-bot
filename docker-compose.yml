@@ -16,6 +16,7 @@ services:
       - API_Key=
       - Product=
       - Product_URL=
+      - UnavailableText=
     stdin_open: true
     tty: true
     restart: unless-stopped
