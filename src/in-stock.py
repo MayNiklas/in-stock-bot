@@ -4,6 +4,7 @@ import atexit
 import logging
 import telegram
 import requests
+import datetime
 from time import sleep
 from random import randint
 from telegram import Update
@@ -66,6 +67,8 @@ while True:
     if not UnavailableText in response.text:
        #sending update based on chat objects
        dispatch_update(writer, text=f'{Product} lieferbar! {Product_URL}')
+       #basic logging
+       print(datetime.datetime.now().strftime("%A-%Y-%m-%d %H:%M:%S")+" - Product available!")
     
     sleep(randint(30,60))
 
