@@ -7,6 +7,7 @@ import requests
 from time import sleep
 from random import randint
 from telegram import Update
+from fake_headers import Headers
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
 import csv_utils
@@ -48,14 +49,11 @@ dispatcher = updater.dispatcher
 dispatcher.add_handler(CommandHandler("start", notify))
 updater.start_polling()
 
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:82.0) Gecko/20100101 Firefox/82.0',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    'Accept-Language': 'de,en-US;q=0.7,en;q=0.3',
-    'DNT': '1',
-    'Connection': 'keep-alive',
-    'Upgrade-Insecure-Requests': '1',
-}
+headers = Headers(
+    browser="chrome",  # Generate only Chrome UA
+    os="win",  # Generate ony Windows platform
+    headers=True  # generate misc headers
+).generate()
 
 
 def dispatch_update(writer: object, text: str) -> None:
