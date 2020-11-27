@@ -53,7 +53,7 @@ headers = Headers(
     browser="chrome",  # Generate only Chrome UA
     os="win",  # Generate ony Windows platform
     headers=True  # generate misc headers
-)
+).generate()
 
 
 def dispatch_update(writer: object, text: str) -> None:
