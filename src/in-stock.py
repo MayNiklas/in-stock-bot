@@ -52,7 +52,7 @@ dispatcher.add_handler(CommandHandler("start", startCommand))
 updater.start_polling()
 
 def dispatch_update(writer: object, text: str) -> None:
-    # Iterates trough the list of chat objects - sending update
+    """Iterates trough the list of chat objects - sending update"""
     for chat in writer.entries:
         bot.send_message(chat_id=chat.id, text=text)
         
