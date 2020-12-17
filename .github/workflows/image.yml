@@ -84,9 +84,10 @@ jobs:
         run: |
           docker manifest create \
           "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.DOCKER_REPOSITORY }}":latest \
+          --amend "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.DOCKER_REPOSITORY }}":amd64-latest          
           # --amend "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.DOCKER_REPOSITORY }}":arm64v8-latest \
           # --amend "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.DOCKER_REPOSITORY }}":arm32v7-latest \
-          --amend "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.DOCKER_REPOSITORY }}":amd64-latest
+
            
       - name: push manifest
         run: |
