@@ -71,7 +71,7 @@ jobs:
   #           --platform linux/arm/v7 .
 
   manifest-create:
-    needs: [building-arm64v8, building-arm32v7, building-amd64]
+    needs: [building-amd64]
     runs-on: ubuntu-latest
     steps:
       - name: setup-docker
