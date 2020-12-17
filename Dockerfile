@@ -4,8 +4,8 @@ FROM ${ARCH}python:3.8
 #  installing project dependencies // adding google-chrome to apt sources
 RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add && \
   echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
-  apt-get update && apt-get -y upgrade && apt-get install -y && \
-  install google-chrome-stable \
+  apt-get update && apt-get -y upgrade && apt-get install -y \
+  google-chrome-stable \
   python3-pip \
   unzip
 
