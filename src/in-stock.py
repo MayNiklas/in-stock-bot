@@ -79,7 +79,7 @@ while availability == False:
 	# check if UnavailableText is visible on the page
 	if not chrome.find_elements_by_xpath("//*[contains(text(),'"+unavailabilityMessage+"')]"):
 		dispatch_update(writer, text=f'Jetzt {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")} ist das {product} lieferbar! \n {productUrl}')
-		dispatch_update(writer, text=f'Falls du das {product} weiterhin hier {productUrl} beobachten willst, musst du den Docker Deinst neu Starten.')
+		dispatch_update(writer, text=f'Falls du das {product} weiterhin hier {productUrl} beobachten willst, musst du den Docker Container neu starten.')
 		availability = True
 		chrome.quit()
 
