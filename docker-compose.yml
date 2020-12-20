@@ -13,14 +13,6 @@ services:
     environment:
       - UID=1000 
       - GID=1000
-      # add your Telegram API key
-      - API_Key=
-      # set the product name
-      - Product=
-      # set the product URL
-      - Product_URL=
-      # set the unavailable text
-      - UnavailableText=
     stdin_open: true
     tty: true
     restart: unless-stopped
