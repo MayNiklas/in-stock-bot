@@ -17,7 +17,7 @@ import csv_utils
 
 
 ''' get Configuration from config.json file '''
-with open('config.json') as json_file:
+with open('/app/data/config.json') as json_file:
     data = json.load(json_file)
     apiKey = data["telegram"]
 
