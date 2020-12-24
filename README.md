@@ -1,5 +1,9 @@
 # in-stock-bot
-[![GitHub Stars](https://img.shields.io/github/stars/MayNiklas/in-stock-bot.svg)](stargazers) [![GitHub Issues](https://img.shields.io/github/issues/MayNiklas/in-stock-bot.svg)](issues) [![Lines Of Code](https://tokei.rs/b1/github/MayNiklas/in-stock-bot?category=lines)](inStockBot) [![Lines Of Code](https://tokei.rs/b1/github/MayNiklas/in-stock-bot?category=code)](inStockBot) [![Lines Of Code](https://tokei.rs/b1/github/MayNiklas/in-stock-bot?category=files)](inStockBot)
+[![MIT License](https://img.shields.io/github/license/MayNiklas/in-stock-bot.svg)](LICENSE)
+
+[![GitHub Stars](https://img.shields.io/github/stars/MayNiklas/in-stock-bot.svg)](stargazers) [![GitHub Issues](https://img.shields.io/github/issues/MayNiklas/in-stock-bot.svg)](issues)
+
+[![Lines Of Code](https://tokei.rs/b1/github/MayNiklas/in-stock-bot?category=lines)](inStockBot) [![Lines Of Code](https://tokei.rs/b1/github/MayNiklas/in-stock-bot?category=code)](inStockBot) [![Lines Of Code](https://tokei.rs/b1/github/MayNiklas/in-stock-bot?category=files)](inStockBot)
 
 A small python Bot with Telegram notifications for checking availability of a product.
 
