@@ -1,10 +1,11 @@
 ---
 labels: bug
-name: Bug report
+name: 🐛Bug report
 about: Create a report to help us improve
 ---
 
-**Describe the bug**
+
+**🐛 Bug Description**
 
 A clear and concise description of what the bug is.
 
