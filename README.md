@@ -6,7 +6,7 @@ A small python Bot with Telegram notifications for checking availability of a pr
 ![Chat Preview](./inStockBot.jpg)
 
 ## Setup
-Clone this repo to your enviroment and change the `config.json` at first.
+Clone this repo to your enviroment and renama the `example-config.json` to `config.json` at first.
 In the `config.json` your must add your Telegram Api Key and one or multiple products.
 ```json
 "product": [
