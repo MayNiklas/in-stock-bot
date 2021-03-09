@@ -1,25 +1,26 @@
+import os
+from typing import List
 import atexit
 import datetime
 import logging
-import json
 from random import randint
 from time import sleep
 
 import requests
 import telegram
-from bs4 import BeautifulSoup as bs
 from fake_headers import Headers
+from selenium.webdriver.remote.webelement import WebElement
 from selenium import webdriver
 from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler, Updater
 
 import csv_utils
 
+LINK = os.environ['LINK']
+apiKey = os.environ['API_Key']
 
-''' get Configuration from config.json file '''
-with open('/app/data/config.json') as json_file:
-    data = json.load(json_file)
-    apiKey = data["telegram"]
+expected = os.environ['expected']
+unavailabilityMessage = os.environ['unavailabilityMessage']
 
 ''' define global variables '''
 chromedriverPath = 'chromedriver'
@@ -70,16 +71,12 @@ def progbar(count: int, title: str) -> None:
 ''' check the Availability of the Product '''
 while True:
     ''' generade random Windows Google Chrome fake header '''
+
     headers = Headers(browser="chrome", os="win", headers=True).generate()
 
-    ''' coise random product '''
-    randomProduct = randint(0, len(data["product"])-1)
-    productName = data["product"][randomProduct]["name"]
-    productUrl = data["product"][randomProduct]["url"]
-    unavailabilityMessage = data["product"][randomProduct]["value"]
 
     ''' make a request for random product '''
-    req = requests.get(productUrl)
+    req = requests.get(LINK)
 
     ''' waiting for website response '''
     for i in progbar(5, "waiting for Website response..."):
@@ -97,19 +94,22 @@ while True:
         options.add_argument("user-agent="+headers["User-Agent"])
         chrome = webdriver.Chrome(
             executable_path=chromedriverPath, options=options)
-        chrome.get(productUrl)
+        chrome.get(LINK)
 
         ''' wait before page is loading '''
         for i in progbar(10, "waiting for page loading is complete..."):
             sleep(1)
 
         ''' check if UnavailableText is visible on the page '''
-        searchMessage = chrome.find_elements_by_xpath(
-            "//*[contains(text(),'"+unavailabilityMessage+"')]")
-        if len(searchMessage) != 0:
-            dispatch_update(
-                writer, text=f'Jetzt {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")} ist das {productName} lieferbar! \n {productUrl}')
-            chrome.quit()
+        # searching for text block
+        result: List[WebElement] = chrome.find_elements_by_link_text(unavailabilityMessage)
+
+        # checking if site changed expected state
+        if len(result) != expected:
+            dispatch_update(writer,
+                            f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}\nState of your tracked Site has changed:\n {LINK}')
+
+        chrome.quit()
 
         ''' wait before make a new request for checking the product '''
         sleep(randint(30, 40))
