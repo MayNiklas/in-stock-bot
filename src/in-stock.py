@@ -20,7 +20,7 @@ import csv_utils
 LINK = os.environ['LINK']
 apiKey = os.environ['API_Key']
 
-expected = os.environ['expected']
+expected = int(os.environ['expected'])
 unavailabilityMessage = os.environ['unavailabilityMessage']
 
 ''' define global variables '''
@@ -73,51 +73,57 @@ def progbar(count: int, title: str) -> None:
         yield i
 
 
-''' check the Availability of the Product '''
-while True:
-    ''' generade random Windows Google Chrome fake header '''
+def make_request():
+    """ check the Availability of the Product """
+    while True:
+        ''' generate random Windows Google Chrome fake header '''
+        chromedriverPath = 'chromedriver'
 
-    chromedriverPath = 'chromedriver'
+        headers = Headers(browser="chrome", os="win", headers=True).generate()
 
-    headers = Headers(browser="chrome", os="win", headers=True).generate()
+        ''' make a request for random product '''
+        req = requests.get(LINK)
 
-    ''' make a request for random product '''
-    req = requests.get(LINK)
-
-    ''' waiting for website response '''
-    for i in progbar(5, "waiting for Website response..."):
-        sleep(1)
-
-    ''' work only with proxys wich has a fast response time '''
-    if req.status_code == 200:
-        ''' create Chrome configuration '''
-        options = webdriver.ChromeOptions()
-        options.add_argument("--start-maximized")
-        options.add_argument("--headless")
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        options.add_argument('--ignore-certificate-errors')
-        options.add_argument("user-agent=" + headers["User-Agent"])
-        chrome = webdriver.Chrome(
-            executable_path=chromedriverPath, options=options)
-        chrome.get(LINK)
-
-        ''' wait before page is loading '''
-        for i in progbar(10, "waiting for page loading is complete..."):
+        ''' waiting for website response '''
+        for i in progbar(5, "waiting for Website response..."):
             sleep(1)
 
-        ''' check if UnavailableText is visible on the page '''
-        # searching for text block
-        result: List[WebElement] = chrome.find_elements_by_link_text(unavailabilityMessage)
+        ''' work only with proxys wich has a fast response time '''
+        if req.status_code == 200:
+            ''' create Chrome configuration '''
+            options = webdriver.ChromeOptions()
+            options.add_argument("--start-maximized")
+            options.add_argument("--headless")
+            options.add_argument('--no-sandbox')
+            options.add_argument('--disable-dev-shm-usage')
+            options.add_argument('--ignore-certificate-errors')
+            options.add_argument("user-agent=" + headers["User-Agent"])
+            chrome = webdriver.Chrome(
+                executable_path=chromedriverPath, options=options)
+            chrome.get(LINK)
 
-        # checking if site changed expected state
-        if len(result) != expected:
-            dispatch_update(writer,
-                            f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}\nState of your tracked Site has changed:\n {LINK}')
+            ''' wait before page is loading '''
+            for i in progbar(10, "waiting for page loading is complete..."):
+                sleep(1)
 
-        chrome.quit()
+            ''' check if UnavailableText is visible on the page '''
+            # searching for text block
+            result: List[WebElement] = chrome.find_elements_by_link_text(unavailabilityMessage)
 
-        ''' wait before make a new request for checking the product '''
-        sleep(randint(30, 40))
+            # checking if site changed expected state
+            if len(result) != expected:
+                print(f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")} - Caught change!\n')
+                dispatch_update(writer,
+                                f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+                                f'\nState of your tracked Site has changed:\n {LINK}')
+
+            chrome.quit()
+
+            ''' wait before make a new request for checking the product '''
+            sleep(randint(30, 40))
+
+
+# calling make request function
+make_request()
 
 updater.idle()
