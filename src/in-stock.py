@@ -16,6 +16,7 @@ from telegram.ext import CallbackContext, CommandHandler, Updater
 
 import csv_utils
 
+# get environment variables
 LINK = os.environ['LINK']
 apiKey = os.environ['API_Key']
 
@@ -23,11 +24,11 @@ expected = os.environ['expected']
 unavailabilityMessage = os.environ['unavailabilityMessage']
 
 ''' define global variables '''
-chromedriverPath = 'chromedriver'
 newProxyList = []
 
-''' Telegram Command /start '''
+
 def startCommand(update: Update, context: CallbackContext) -> None:
+    """ Telegram Command /start """
     chat_ids = update.message.chat_id
     update.message.reply_text(
         f"Bot has started!\nYour message ID: {chat_ids}\nYou will receive notifications in the future!")
@@ -40,12 +41,13 @@ bot = telegram.Bot(token=apiKey)
 ''' gets the read / write object '''
 writer = csv_utils.Writer()
 
-''' makes sure the list is written before shuting down '''
 
 @atexit.register
 def goodbye():
+    """ makes sure the list is written before shuting down """
     writer.write()
     print("Saved to file - stopping now")
+
 
 ''' init updater '''
 logging.basicConfig(
@@ -57,23 +59,27 @@ dispatcher = updater.dispatcher
 dispatcher.add_handler(CommandHandler("start", startCommand))
 updater.start_polling()
 
-def dispatch_update(writer: object, text: str) -> None:
-    ''' Iterates trough the list of chat objects - sending update '''
+
+def dispatch_update(writer: csv_utils.Writer, text: str) -> None:
+    """ Iterates trough the list of chat objects - sending update """
     for chat in writer.entries:
         bot.send_message(chat_id=chat.id, text=text)
 
-''' create a progress bar '''
+
 def progbar(count: int, title: str) -> None:
+    """ create a progress bar """
     for i in range(count):
-        print(f"{i*'█'}{(count-1-i)*' '} - {i+1}/{count} {title}", end="\r")
+        print(f"{i * '█'}{(count - 1 - i) * ' '} - {i + 1}/{count} {title}", end="\r")
         yield i
+
 
 ''' check the Availability of the Product '''
 while True:
     ''' generade random Windows Google Chrome fake header '''
 
-    headers = Headers(browser="chrome", os="win", headers=True).generate()
+    chromedriverPath = 'chromedriver'
 
+    headers = Headers(browser="chrome", os="win", headers=True).generate()
 
     ''' make a request for random product '''
     req = requests.get(LINK)
@@ -81,7 +87,7 @@ while True:
     ''' waiting for website response '''
     for i in progbar(5, "waiting for Website response..."):
         sleep(1)
-     
+
     ''' work only with proxys wich has a fast response time '''
     if req.status_code == 200:
         ''' create Chrome configuration '''
@@ -91,7 +97,7 @@ while True:
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         options.add_argument('--ignore-certificate-errors')
-        options.add_argument("user-agent="+headers["User-Agent"])
+        options.add_argument("user-agent=" + headers["User-Agent"])
         chrome = webdriver.Chrome(
             executable_path=chromedriverPath, options=options)
         chrome.get(LINK)
