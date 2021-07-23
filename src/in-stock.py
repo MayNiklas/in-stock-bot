@@ -120,7 +120,7 @@ def make_request():
             chrome.quit()
 
             ''' wait before make a new request for checking the product '''
-            sleep(randint(30, 40))
+            sleep(randint(30, 90))
 
 
 # calling make request function
