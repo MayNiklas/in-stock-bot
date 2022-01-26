@@ -119,10 +119,10 @@ def check_site():
     """ check the Availability of the Product """
     while True:
         # checking if site changed expected state
-        if make_request:
+        if make_request():
             sleep(5)
             # check if it really changed and didnt just encounter an error the first time
-            if make_request:
+            if make_request():
                 print(
                     f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")} - Caught change!\n'
                 )
