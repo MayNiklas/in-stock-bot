@@ -130,3 +130,5 @@ dmypy.json
 
 # ignore generatet files
 data/
+
+.vscode
