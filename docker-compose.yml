@@ -13,10 +13,10 @@ services:
     environment:
       - UID=1000 
       - GID=1000
-      - LINK=
-      - API_Key=
+      - LINK=REPLACE_WITH_THE_LINK_TO_PRODUCT_PAGE
+      - API_Key=ADD_TELEGRAM_KEY_HERE
       - expected=4
-      - unavailabilityMessage=DERZEIT NICHT VERFÜGBAR
+      - unavailabilityMessage=ADD_UNAWAILIBLE_MESSAGE
     stdin_open: true
     tty: true
     restart: unless-stopped
