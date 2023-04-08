@@ -130,3 +130,7 @@ dmypy.json
 
 # ignore generatet files
 data/
+
+# VSCode
+.idea
+.vscode
