@@ -29,6 +29,12 @@ max_interval = int(os.environ.get('max_interval', 90))
 
 ''' define global variables '''
 newProxyList = []
+logger = logging.getLogger(__name__)
+
+# set up in main(), so that importing this module has no side effects
+bot = None
+writer = None
+updater = None
 
 
 def startCommand(update: Update, context: CallbackContext) -> None:
@@ -39,29 +45,30 @@ def startCommand(update: Update, context: CallbackContext) -> None:
     chat = writer.add(update.message.chat)
 
 
-''' init Telegram-Bot '''
-bot = telegram.Bot(token=apiKey)
-
-''' gets the read / write object '''
-writer = csv_utils.Writer()
-
-
-@atexit.register
 def goodbye():
     """ makes sure the list is written before shuting down """
     writer.write()
     print("Saved to file - stopping now")
 
 
-''' init updater '''
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
-logger = logging.getLogger(__name__)
-updater = Updater(apiKey, use_context=True)
-dispatcher = updater.dispatcher
-dispatcher.add_handler(CommandHandler("start", startCommand))
-updater.start_polling()
+def setup() -> None:
+    """ init Telegram-Bot, the read / write object and the updater """
+    global bot, writer, updater
+
+    bot = telegram.Bot(token=apiKey)
+
+    ''' gets the read / write object '''
+    writer = csv_utils.Writer()
+    atexit.register(goodbye)
+
+    ''' init updater '''
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+    )
+    updater = Updater(apiKey, use_context=True)
+    dispatcher = updater.dispatcher
+    dispatcher.add_handler(CommandHandler("start", startCommand))
+    updater.start_polling()
 
 
 def dispatch_update(writer: csv_utils.Writer, text: str) -> None:
@@ -127,7 +134,13 @@ def make_request():
             sleep(randint(min_interval, max_interval))
 
 
-# calling make request function
-make_request()
+def main() -> None:
+    setup()
+    # calling make request function
+    make_request()
 
-updater.idle()
+    updater.idle()
+
+
+if __name__ == "__main__":  # pragma: no cover
+    main()
