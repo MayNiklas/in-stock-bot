@@ -58,6 +58,14 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
 logger = logging.getLogger(__name__)
+
+# additionally write the log to a file (default inside the data volume)
+LOG_FILE = os.environ.get('LOG_FILE', 'data/in-stock-bot.log')
+if LOG_FILE:
+    os.makedirs(os.path.dirname(LOG_FILE) or '.', exist_ok=True)
+    file_handler = logging.FileHandler(LOG_FILE)
+    file_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    logging.getLogger().addHandler(file_handler)
 updater = Updater(apiKey, use_context=True)
 dispatcher = updater.dispatcher
 dispatcher.add_handler(CommandHandler("start", startCommand))
@@ -87,6 +95,7 @@ def make_request():
 
         ''' make a request for random product '''
         req = requests.get(LINK)
+        logger.info(f'request {LINK} -> HTTP {req.status_code} in {req.elapsed.total_seconds():.2f}s')
 
         ''' waiting for website response '''
         for i in progbar(5, "waiting for Website response..."):
@@ -115,11 +124,13 @@ def make_request():
             result: List[WebElement] = chrome.find_elements_by_link_text(unavailabilityMessage)
 
             # checking if site changed expected state
+            logger.info(f'check {LINK}: found {len(result)} matching elements, expected {expected}')
             if len(result) != expected:
-                print(f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")} - Caught change!\n')
+                logger.warning(f'Caught change on {LINK} (found {len(result)}, expected {expected})')
                 dispatch_update(writer,
                                 f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
                                 f'\nState of your tracked Site has changed:\n {LINK}')
+                logger.info(f'notification sent to {len(writer.entries)} chat(s)')
 
             chrome.quit()
 
