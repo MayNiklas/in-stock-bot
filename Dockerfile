@@ -19,6 +19,10 @@ RUN LATEST_VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_
   chown root:root /usr/local/bin/chromedriver && \
   chmod 0755 /usr/local/bin/chromedriver
 
+# default wait interval (seconds) between two checks, overridable at runtime
+ENV min_interval=30
+ENV max_interval=90
+
 VOLUME /app/
 VOLUME /app/data/
 WORKDIR /app
