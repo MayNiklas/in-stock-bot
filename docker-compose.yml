@@ -17,6 +17,8 @@ services:
       - API_Key=
       - expected=4
       - unavailabilityMessage=
+      - min_interval=30
+      - max_interval=90
     stdin_open: true
     tty: true
     restart: unless-stopped

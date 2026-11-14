@@ -23,6 +23,10 @@ apiKey = os.environ['API_Key']
 expected = int(os.environ['expected'])
 unavailabilityMessage = os.environ['unavailabilityMessage']
 
+# random wait interval (seconds) between two checks
+min_interval = int(os.environ.get('min_interval', 30))
+max_interval = int(os.environ.get('max_interval', 90))
+
 ''' define global variables '''
 newProxyList = []
 
@@ -120,7 +124,7 @@ def make_request():
             chrome.quit()
 
             ''' wait before make a new request for checking the product '''
-            sleep(randint(30, 90))
+            sleep(randint(min_interval, max_interval))
 
 
 # calling make request function

@@ -26,6 +26,9 @@ In the `config.json` your must add your Telegram Api Key and one or multiple pro
 ```
 
 
+### Request interval
+The bot waits a random time between two checks. The range is set with the environment variables `min_interval` and `max_interval` (in seconds). Defaults: `30` and `90`. Example: `min_interval=60` and `max_interval=43200` for rare products.
+
 ## Usage
 After you change the `config.json` File, build your Docker Container with 
 
